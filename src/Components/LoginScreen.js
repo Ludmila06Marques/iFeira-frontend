@@ -25,9 +25,7 @@ export default function LoginScreen(){
            
         })    
         .catch(err=>{   
-            if( err.response.status === 409) {
-                return alert("usuario ja cadastrado")
-            }
+          console.log(err)
             
             
     

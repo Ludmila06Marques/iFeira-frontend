@@ -31,7 +31,8 @@ export default function RegisterScreen(){
            
         })
       
-        .catch(err=>{          
+        .catch(err=>{   
+            console.log(err)       
          
            
         })
