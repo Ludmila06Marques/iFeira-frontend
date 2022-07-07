@@ -19,7 +19,7 @@ export default function App(){
 
     return(<>
     
-    <appContext.Provider value={{email , setEmail , password , setPassword , name , setName , token , setToken , view , setView , home , setHome}} >
+    <appContext.Provider value={{email , setEmail , password , setPassword , name , setName , token , setToken , view , setView , home , setHome , setLogin , login}} >
     <BrowserRouter>
     <Routes>
        

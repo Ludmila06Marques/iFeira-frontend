@@ -8,6 +8,10 @@ import axios from "axios"
 
 
 export default function LoginScreen(){
+
+    
+    const {email , setEmail , password , setPassword    , setToken , setLogin  , setView , view , login }= useContext(appContext)
+  
     const navigate= useNavigate()
 
     function signIn(){
@@ -42,7 +46,6 @@ function hidePassword(){
     setView("password")
 }
 
-         const {email , setEmail , password , setPassword    , setToken , setLogin  , setView , view}= useContext(appContext)
     return(<>
     
     <Container>
