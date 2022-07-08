@@ -22,11 +22,12 @@ export default function RegisterScreen(){
         console.log("registrando")
         const body={email , name , password , home}
                 
-         const promise=   axios.post('https://ifeiraapp.herokuapp.com/sign-up' , body)
+       //  const promise=   axios.post('https://ifeiraapp.herokuapp.com/sign-up' , body)
+         const promise= axios.post('http://localhost:5000/sign-up' , body)
       
         promise
         .then(res=>{ 
-
+         console.log(res.data)
               navigate("/")
            
         })

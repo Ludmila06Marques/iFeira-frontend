@@ -16,11 +16,15 @@ export default function LoginScreen(){
 
     function signIn(){
         const body={ email , password }
+        console.log(body)
 
-        const promise= axios.post('https://ifeiraapp.herokuapp.com/sign-in' , body)
+     //   const promise= axios.post('https://ifeiraapp.herokuapp.com/sign-in' , body)
+        const promise= axios.post('http://localhost:5000/sign-in' , body)
+   
       
         promise
-        .then(res=>{           
+        .then(res=>{ 
+            console.log(res.data)
            setLogin(res.data)
            setToken(res.data.token)                
             navigate("/home")   
@@ -29,7 +33,9 @@ export default function LoginScreen(){
            
         })    
         .catch(err=>{   
-          console.log(err)
+            if( err.response.status === 409) {
+                return alert("usuario ja cadastrado")
+            }
             
             
     

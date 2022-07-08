@@ -1,9 +1,12 @@
 import styled from "styled-components"
 import {useState} from 'react'
-import { createPortal } from "react-dom"
+import  start from "../img/start.png"
+import appContext from "../Contexts/AppContext.js"
+import { useContext } from "react"
+import {Link} from "react-router-dom"
 
 
-function SideBarr({barr , setBarr}){
+function SideBarr({barr , setBarr , login}){
     function hideProfile(){
         setBarr(true)
     }
@@ -14,14 +17,51 @@ function SideBarr({barr , setBarr}){
     <Profile>
     
     <ion-icon onClick={hideProfile} name="person-circle-outline"></ion-icon>
-    Ludmila Marques
+  {login.userExist.name}
     </Profile>
-      
+    <Link to="/data" >
+    <Rest><ion-icon name="clipboard-outline"></ion-icon> Meus dados</Rest>
+    </Link>
+    <Rest><ion-icon name="card-outline"></ion-icon> Pagamentos</Rest>
+    <Rest><ion-icon name="albums-outline"></ion-icon> Cupons</Rest>
+    <Link to="/help" >
+    <RestFinal><ion-icon name="help-circle-outline"></ion-icon> Ajuda</RestFinal>
+    </Link> 
 
         </Group>
     </>)
 }
 
+const RestFinal=styled.div`
+position: fixed;
+bottom: 0;
+width: 230px;
+height: 52px;
+background-color: beige;
+display: flex;
+
+color: red;
+align-items: center;
+
+ion-icon{
+    font-size: 10px;
+}
+`
+const Rest=styled.div`
+margin-top: 20px;
+width: 230px;
+height: 52px;
+background-color: beige;
+display: flex;
+
+color: red;
+align-items: center;
+
+ion-icon{
+    font-size: 10px;
+}
+
+`
 
 function Choose({option ,setOption}){
 
@@ -79,6 +119,32 @@ function News(){
 function Buy(){
     return(<></>)
 }
+function Start(){
+    return(<>
+    <Center><TitleStart> Faça sua feirinha !! </TitleStart><img src={start} /> </Center>
+    </>)
+}
+const Center=styled.div`
+flex-direction: column;
+display: flex;
+justify-content: center;
+align-items: center;
+
+img{
+  margin-top: 30px;
+   width: 210px;
+   height: 200px;
+   opacity: 0.2;
+}
+`
+const TitleStart=styled.h1`
+font-size: 40px;
+color: white;
+margin-top: 50px;
+font-family:"Abril Fatface";
+text-align: center;
+max-width: 150px;
+`
 
 const OneSmall=styled.div`
 width: 145px;
@@ -130,9 +196,10 @@ align-items: center;
 `
 
 export default function Home(){
+    const { login }= useContext(appContext)
 
     const [barr , setBarr]=useState(true)
-    const [option , setOption]=useState("1")
+    const [option , setOption]=useState("")
     function viewProfile(){
         setBarr(false)
     }
@@ -140,14 +207,15 @@ export default function Home(){
     
     return(
         <>
-     <SideBarr barr={barr} setBarr={setBarr}  />  
+     <SideBarr barr={barr} setBarr={setBarr} login={login} />  
      <SearchBarr>
         <ion-icon onClick={viewProfile} name="list-outline"></ion-icon>
             <InputsSearch placeholder="Busque aqui"/>
             <Filter>Filtrar</Filter>
             </SearchBarr>
             <Choose option={option} setOption={setOption} />
-            {option==="1"? 
+            {option==""? <Start/>
+            : option==="1"? 
              <Category/> : option==="2" ? <News/>: <Buy/>  }
            
           
@@ -162,10 +230,12 @@ display: flex;
 justify-content: space-around;
 align-items: center;
 margin-top: 10px;
+font-weight: bold;
 
 `
 
 const Group=styled.div`
+
 width: 230px;
 height: 100%;
 background-color: white;
@@ -174,6 +244,9 @@ top: 0;
 left: 0;
 z-index: 1;
 margin-left: ${props => props.margin ? "-230px": "0"};
+a{
+    text-decoration: none;
+}
 
 
 
@@ -187,7 +260,6 @@ const Container=styled.div`
 width: 100%;
 height: 52px;
 box-shadow: 0 0 1em white;
-overflow-x: scroll;
 display: flex;
 justify-content: space-around;
 align-items: center;
