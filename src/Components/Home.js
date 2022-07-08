@@ -1,9 +1,12 @@
 import styled from "styled-components"
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import  start from "../img/start.png"
 import appContext from "../Contexts/AppContext.js"
 import { useContext } from "react"
 import {Link} from "react-router-dom"
+import a from "../img/a.jpg"
+import axios from "axios";
+
 
 
 function SideBarr({barr , setBarr , login}){
@@ -11,13 +14,13 @@ function SideBarr({barr , setBarr , login}){
         setBarr(true)
     }
 
-  
+    
     return(<>
     <Group margin={barr} >
     <Profile>
     
     <ion-icon onClick={hideProfile} name="person-circle-outline"></ion-icon>
-  {login.userExist.name}
+    {login.userExist.name}
     </Profile>
     <Link to="/data" >
     <Rest><ion-icon name="clipboard-outline"></ion-icon> Meus dados</Rest>
@@ -87,18 +90,29 @@ function Choose({option ,setOption}){
 }
 
 function Category(){
+
+    const [categories, setCategories]=useState([]);
+
+    useEffect(() => {
+        const promise = axios.get("http://localhost:5000/categories");
+
+        promise.then((res) => {setCategories(res.data)});
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
+    })
+
     return(<>
     <Weater>
-        <OneCategory></OneCategory>
-        <OneCategory></OneCategory>
-        <OneCategory></OneCategory>
-        <OneCategory></OneCategory>
-        <OneCategory></OneCategory>
-        <OneCategory></OneCategory>
+        {categories.length === 0 ? "Carregando..." : categories.map((category, index) => 
+        <OneCategory>
+            <img src={category.image} key={index} />
+            <h1>{category.name}</h1>
+        </OneCategory>
+        )}
     </Weater>
     
     </>)
 }
+
 function News(){
     return(<>
     <Banner>
@@ -185,9 +199,26 @@ height: 250px;
 background-color: white;
 margin: 8px 8px;
 box-shadow: 0 0 1em red;
+border-radius: 5px;
 
+display: flex;
+align-items: center;
+justify-content: space-evenly;
+flex-direction: column;
+
+    img{
+        width: 120px;
+        height: 180px;
+        border-radius: 5px;
+    }
+
+    h1{
+        font-size: 24px;
+        color: #000000;
+    }
 
 `
+
 const Weater = styled.div`
 display: flex;
 flex-wrap: wrap;
@@ -196,12 +227,12 @@ align-items: center;
 `
 
 export default function Home(){
-    const { login }= useContext(appContext)
+    const { login }= useContext(appContext);
 
-    const [barr , setBarr]=useState(true)
-    const [option , setOption]=useState("")
-    function viewProfile(){
-        setBarr(false)
+    const [barr , setBarr]=useState(true);
+    const [option , setOption]=useState("");
+    function viewProfile() {
+        setBarr(false);
     }
 
     

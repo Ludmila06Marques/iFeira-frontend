@@ -11,14 +11,14 @@ export default function Data(){
     <Link to="/home" >
     <Icon><ion-icon name="arrow-back-outline"></ion-icon></Icon>
     </Link>
-      <Container>
+    <Container>
     
     <InputName placeholder={login.userExist.name} disabled></InputName>
     <InputEmail placeholder={login.userExist.email} disabled></InputEmail>
     <InputHome placeholder={login.userExist.home}disabled ></InputHome>
     
     
-      
+        
 
     </Container></>)
 }
