@@ -11,7 +11,7 @@ export default function LoginScreen(){
 
     
     const {email , setEmail , password , setPassword    , setToken , setLogin  , setView , view , login }= useContext(appContext)
-  
+    
     const navigate= useNavigate()
 
     function signIn(){
@@ -20,17 +20,17 @@ export default function LoginScreen(){
 
      //   const promise= axios.post('https://ifeiraapp.herokuapp.com/sign-in' , body)
         const promise= axios.post('http://localhost:5000/sign-in' , body)
-   
-      
+
+    
         promise
         .then(res=>{ 
             console.log(res.data)
-           setLogin(res.data)
-           setToken(res.data.token)                
+            setLogin(res.data)
+            setToken(res.data.token)                
             navigate("/home")   
-              
 
-           
+
+            
         })    
         .catch(err=>{   
             if( err.response.status === 409) {
@@ -39,7 +39,7 @@ export default function LoginScreen(){
             
             
     
-           
+            
         })
 
 
@@ -55,20 +55,20 @@ function hidePassword(){
     return(<>
     
     <Container>
-   
+        
         <Title> <img src={image} width= "100px" height="100px" /> iFeira</Title>
         <InputEmail placeholder="E-mail"onChange={(e)=> setEmail(e.target.value)} value={email} ></InputEmail>
-       <Group>
+        <Group>
         {view==="password"?
-         <IconEye onClick={viewPassword}><ion-icon name="eye-outline"></ion-icon></IconEye>
+        <IconEye onClick={viewPassword}><ion-icon name="eye-outline"></ion-icon></IconEye>
         :
         <IconEye  onClick={hidePassword}><ion-icon name="eye-off-outline"></ion-icon></IconEye>
         }
-       
+
         <InputPassword placeholder="Senha "type={view} onChange={(e)=> setPassword(e.target.value)} value={password}></InputPassword>
         </Group>
-      
-       
+        
+        
         <SingInButton onClick={signIn} >Entrar</SingInButton>
         
         <Link to="/register">

@@ -23,12 +23,12 @@ console.log(login)
     <appContext.Provider value={{email , setEmail , password , setPassword , name , setName , token , setToken , view , setView , home , setHome , setLogin , login}} >
     <BrowserRouter>
     <Routes>
-       
-       <Route  path="/" element={<LoginScreen/>}></Route> 
-       <Route  path="/register" element={<RegisterScreen/>}></Route> 
-       <Route  path="/home" element={<Home/>}></Route> 
-       <Route  path="/data" element={<Data/>}></Route> 
-       <Route  path="/help" element={<Help/>}></Route> 
+        
+        <Route  path="/" element={<LoginScreen/>}></Route> 
+        <Route  path="/register" element={<RegisterScreen/>}></Route> 
+        <Route  path="/home" element={<Home/>}></Route> 
+        <Route  path="/data" element={<Data/>}></Route> 
+        <Route  path="/help" element={<Help/>}></Route> 
         
         
 
