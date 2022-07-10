@@ -4,7 +4,6 @@ import  start from "../img/start.png"
 import appContext from "../Contexts/AppContext.js"
 import { useContext } from "react"
 import {Link} from "react-router-dom"
-import a from "../img/a.jpg"
 import axios from "axios";
 
 
@@ -26,7 +25,9 @@ function SideBarr({barr , setBarr , login}){
     <Rest><ion-icon name="clipboard-outline"></ion-icon> Meus dados</Rest>
     </Link>
     <Rest><ion-icon name="card-outline"></ion-icon> Pagamentos</Rest>
-    <Rest><ion-icon name="albums-outline"></ion-icon> Cupons</Rest>
+    <Link to="/pedidos" >
+    <Rest><ion-icon name="albums-outline"></ion-icon> Meus Pedidos</Rest>
+    </Link>
     <Link to="/help" >
     <RestFinal><ion-icon name="help-circle-outline"></ion-icon> Ajuda</RestFinal>
     </Link> 
@@ -68,21 +69,24 @@ ion-icon{
 
 function Choose({option ,setOption}){
 
+    const { setChosenCategory } = useContext(appContext);
+
     function first(){
-        setOption("1")
+        setChosenCategory(null);
+        setOption("1");
     }
     function second(){
-        setOption("2")
+        setOption("2");
     }
     function third(){
-        setOption("3")
+        setOption("3");
     }
     return(<>
     <Container>
         <One onClick={first} >CATEGORIAS</One>
         <One onClick={second}>NOVIDADES</One>
         <One onClick={third}><ion-icon name="cart-outline"></ion-icon></One>
-       
+    
 
 
     </Container>
@@ -92,22 +96,39 @@ function Choose({option ,setOption}){
 function Category(){
 
     const [categories, setCategories]=useState([]);
+    const { chosenCategory, setChosenCategory } = useContext(appContext);
+    const [itemsFromCategory, setItemsFromCategory] = useState([]);
 
     useEffect(() => {
         const promise = axios.get("http://localhost:5000/categories");
 
         promise.then((res) => {setCategories(res.data)});
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
-    })
+    }, []);
+
+    function getProductsFromCategory() {
+        const promise = axios.get(`http://localhost:5000/categories/${chosenCategory}`);
+
+        promise.then((res) => {setItemsFromCategory(res.data)});
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
+    }
 
     return(<>
     <Weater>
-        {categories.length === 0 ? "Carregando..." : categories.map((category, index) => 
-        <OneCategory>
-            <img src={category.image} key={index} />
+        {/* {chosenCategory !== null ? itemsFromCategory.map((item, index) => {
+            <OneProduct key={index}>
+                <img src={item.image} />
+                <h1>{item.name}</h1>
+                <
+            </OneProduct>
+        })
+        <OneProduct></OneProduct>
+        : categories.length === 0 ? "Carregando..." : categories.map((category, index) => 
+        <OneCategory key={index}>
+            <img src={category.image} />
             <h1>{category.name}</h1>
         </OneCategory>
-        )}
+        )} */}
     </Weater>
     
     </>)
@@ -131,8 +152,173 @@ function News(){
 }
 
 function Buy(){
-    return(<></>)
+    
+    const [ativarPedido, setAtivarPedido]=useState(false);
+
+
+    return(
+    <>
+
+    
+        <OutroContainer>
+            <Pedido>
+                <NomeDoProduto>Produto Aqui</NomeDoProduto>
+                <Icones>
+                    <ion-icon name="remove-circle-outline"></ion-icon>
+                    <Quantidade>10</Quantidade>
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                </Icones>
+            </Pedido>
+            <Pedido>
+
+            </Pedido>
+            <Footer>
+                <BotaoCheckout onClick={() => setAtivarPedido(true)}>Fazer Pedido</BotaoCheckout>
+            </Footer>
+            <ContainerOverlay ativarPedido={ativarPedido}>
+                <Overlay/>
+                <Modal>
+                    <h2>O valor total do seu pedido é</h2>
+                    <Saldo>239,98</Saldo>
+                    <BotaoConfirmar>Confirmar Pedido</BotaoConfirmar>
+                </Modal>
+            </ContainerOverlay>
+        </OutroContainer>
+    </>)
 }
+
+
+const BotaoConfirmar = styled.button`
+width: 60vw;
+height: 100px;
+background-color: red;
+
+border: 1px solid red;
+border-radius: 5px;
+
+font-size: 30px;
+color: white;
+`
+
+const Saldo = styled.h2`
+font-size: 35px;
+color: black;
+`
+
+const ContainerOverlay = styled.div`
+display: ${props => props.ativarPedido ? "inline" : "none"};
+`
+
+const Overlay = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+
+padding: 40px;
+width: 100vw;
+height: 100vh;
+position: fixed;
+top: 0;
+left: 0;
+background-color: rgba(0, 0, 0, 0.7);
+`
+
+const Modal = styled.div`
+width: 80vw;
+height: 80vw;
+background-color: white;
+
+border-radius: 5px;
+
+position: absolute;
+left: 10vw;
+bottom: 50vw;
+
+display: flex;
+align-items: center;
+justify-content: space-evenly;
+flex-direction: column;
+
+h1 {
+    font-size: 25px;
+}
+
+
+`
+
+const Footer = styled.div`
+
+width: 100%;
+height: 100px;
+
+position: fixed;
+bottom: 0;
+
+display: flex;
+align-items: center;
+justify-content: center;
+`
+
+const BotaoCheckout = styled.button`
+width: 335px;
+height: 52px;
+border-radius: 5px;
+border: 1px solid white;
+
+font-size: 30px;
+color: black;
+
+box-shadow: 0 0 1em black;
+
+`
+
+const OutroContainer = styled.div`
+
+`
+
+const Pedido = styled.div`
+width: 100%;
+height: 100px;
+background-color: white;
+margin-top: 15px;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+padding: 0 10px;
+
+`
+
+const Icones = styled.div`
+
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: row;
+
+ion-icon:first-child {
+    font-size: 30px;
+    color: red;
+}
+
+ion-icon:last-child {
+    font-size: 30px;
+    color: green;
+}
+`
+
+const Quantidade = styled.h1`
+font-size: 20px;
+color: black;
+padding: 0 10px;
+`
+
+const NomeDoProduto = styled.h1`
+font-size: 20px;
+color: black;
+`
+
 function Start(){
     return(<>
     <Center><TitleStart> Faça sua feirinha !! </TitleStart><img src={start} /> </Center>
@@ -229,6 +415,7 @@ align-items: center;
 export default function Home(){
     const { login }= useContext(appContext);
 
+
     const [barr , setBarr]=useState(true);
     const [option , setOption]=useState("");
     function viewProfile() {
@@ -248,11 +435,13 @@ export default function Home(){
             {option==""? <Start/>
             : option==="1"? 
              <Category/> : option==="2" ? <News/>: <Buy/>  }
-           
+            
           
             </>
     )
 }
+
+
 
 const Profile=styled.div`
 color: red;
