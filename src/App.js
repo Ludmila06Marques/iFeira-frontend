@@ -18,13 +18,14 @@ export default function App(){
     const [view , setView]=useState("password")
     const [home  , setHome]=useState("")
     const [chosenCategory, setChosenCategory]=useState()
+    const [produtos, setProdutos]=useState([])
 
 console.log(login)
 
 
     return(<>
     
-    <appContext.Provider value={{email , setEmail , password , setPassword , name , setName , token , setToken , view , setView , home , setHome , setLogin , login, chosenCategory, setChosenCategory}} >
+    <appContext.Provider value={{email , setEmail , password , setPassword , name , setName , token , setToken , view , setView , home , setHome , setLogin , login, chosenCategory, setChosenCategory, produtos, setProdutos}} >
     <BrowserRouter>
     <Routes>
         

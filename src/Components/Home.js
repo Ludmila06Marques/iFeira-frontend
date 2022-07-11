@@ -97,6 +97,8 @@ function Category(){
 
     const [categories, setCategories]=useState([]);
     const { chosenCategory, setChosenCategory } = useContext(appContext);
+    const { token } = useContext(appContext);
+    const { produtos, setProdutos } = useContext(appContext);
     const [itemsFromCategory, setItemsFromCategory] = useState([]);
 
     useEffect(() => {
@@ -107,32 +109,101 @@ function Category(){
     }, []);
 
     function getProductsFromCategory() {
-        const promise = axios.get(`http://localhost:5000/categories/${chosenCategory}`);
+        console.log(chosenCategory)
+        if (chosenCategory !== null) {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            const nome = chosenCategory.toLowerCase()
+            const body = { category: nome };
+            const promise = axios.post("http://localhost:5000/category", body, config);
 
-        promise.then((res) => {setItemsFromCategory(res.data)});
+            promise.then((res) => {setItemsFromCategory(res.data)});
+            promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
+        }
+    }
+
+    function menosUm( name ) {
+        const body = { name };
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(`http://localhost:5000/menos-um`, body, config);
+
+        promise.then((res) => setProdutos(res.data));
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
     }
 
+    function maisUm( name ) {
+        const body = { name };
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(`http://localhost:5000/mais-um`, body, config);
+
+        promise.then((res) => setProdutos(res.data));
+        promise.catch((err) => console.log(err));
+    }
+
+    console.log(itemsFromCategory)
+
     return(<>
     <Weater>
-        {/* {chosenCategory !== null ? itemsFromCategory.map((item, index) => {
+        {chosenCategory !== null && itemsFromCategory.length !== 0 ? itemsFromCategory.map((item, index) => { return (
             <OneProduct key={index}>
                 <img src={item.image} />
                 <h1>{item.name}</h1>
-                <
+                <h1>R$ {item.preco}</h1>
+                <Icones>
+                    <ion-icon name="remove-circle-outline" onClick={() => menosUm(item.name)}></ion-icon>
+                    <Quantidade>{item.qtd}</Quantidade>
+                    <ion-icon name="add-circle-outline" onClick={() => maisUm(item.name)}></ion-icon>
+                </Icones>
             </OneProduct>
-        })
-        <OneProduct></OneProduct>
-        : categories.length === 0 ? "Carregando..." : categories.map((category, index) => 
-        <OneCategory key={index}>
+        )})
+        : categories.length === 0 ? "Carregando..." : categories.map((category, index) => { return (
+        <OneCategory key={index} onClick={() => {setChosenCategory(category.name)
+                                                getProductsFromCategory()}}>
             <img src={category.image} />
             <h1>{category.name}</h1>
         </OneCategory>
-        )} */}
+        )})}
     </Weater>
     
     </>)
 }
+
+const OneProduct = styled.div`
+width: 150px;
+height: 250px;
+background-color: white;
+margin: 8px 8px;
+box-shadow: 0 0 1em red;
+border-radius: 5px;
+
+display: flex;
+align-items: center;
+justify-content: space-evenly;
+flex-direction: column;
+
+    img{
+        width: 120px;
+        height: 180px;
+        border-radius: 5px;
+    }
+
+    h1{
+        font-size: 24px;
+        color: #000000;
+    }
+
+`
 
 function News(){
     return(<>
@@ -154,32 +225,83 @@ function News(){
 function Buy(){
     
     const [ativarPedido, setAtivarPedido]=useState(false);
+    const [valorTotal, setValorTotal]=useState(0);
+    const [produtos, setProdutos]=useState([]);
+    const {token}=useContext(appContext);
 
+    useEffect(() => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.get("http://localhost:5000/carrinho", config);
+
+        promise.then((res) => setProdutos(res.data));
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"))
+    }, []);
+
+    function ativarCheckout() {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.get("http://localhost:5000/checkout", config);
+
+        promise.then((res) => setValorTotal(res.data));
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
+    }
+
+    function menosUm( name ) {
+        const body = { name };
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(`http://localhost:5000/menos-um`, body, config);
+
+        promise.then((res) => setProdutos(res.data));
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
+    }
+
+    function maisUm( name ) {
+        const body = { name };
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(`http://localhost:5000/mais-um`, body, config);
+
+        promise.then((res) => setProdutos(res.data));
+        promise.catch((err) => console.log(err));
+    }
 
     return(
     <>
-
-    
         <OutroContainer>
+            {produtos.length === 0 ? <h1>Você ainda não tem produtos adicionados no carrinho!</h1> : 
+            produtos.map((produto) => { return (
             <Pedido>
-                <NomeDoProduto>Produto Aqui</NomeDoProduto>
+                <NomeDoProduto>{produto.name}</NomeDoProduto>
                 <Icones>
-                    <ion-icon name="remove-circle-outline"></ion-icon>
-                    <Quantidade>10</Quantidade>
-                    <ion-icon name="add-circle-outline"></ion-icon>
+                    <ion-icon name="remove-circle-outline" onClick={() => menosUm(produto.name)}></ion-icon>
+                    <Quantidade>{produto.qtd}</Quantidade>
+                    <ion-icon name="add-circle-outline" onClick={() => maisUm(produto.name)}></ion-icon>
                 </Icones>
             </Pedido>
-            <Pedido>
-
-            </Pedido>
+            )})}
             <Footer>
-                <BotaoCheckout onClick={() => setAtivarPedido(true)}>Fazer Pedido</BotaoCheckout>
+                <BotaoCheckout onClick={() => {setAtivarPedido(true)
+                                                ativarCheckout()}}>Fazer Pedido</BotaoCheckout>
             </Footer>
             <ContainerOverlay ativarPedido={ativarPedido}>
                 <Overlay/>
                 <Modal>
                     <h2>O valor total do seu pedido é</h2>
-                    <Saldo>239,98</Saldo>
+                    <Saldo>{valorTotal.toString().replace(".", ",")}</Saldo>
                     <BotaoConfirmar>Confirmar Pedido</BotaoConfirmar>
                 </Modal>
             </ContainerOverlay>
