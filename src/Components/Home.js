@@ -103,7 +103,7 @@ function Category(){
     const [itemsFromCategory, setItemsFromCategory] = useState([]);
 
     useEffect(() => {
-        const promise = axios.get("http://localhost:5000/categories");
+        const promise = axios.get("https://ifeiraapp.herokuapp.com/categories");
 
         promise.then((res) => {setCategories(res.data)});
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
@@ -119,7 +119,7 @@ function Category(){
             }
             const nome = chosenCategory.toLowerCase()
             const body = { category: nome };
-            const promise = axios.post("http://localhost:5000/category", body, config);
+            const promise = axios.post("https://ifeiraapp.herokuapp.com/category", body, config);
 
             promise.then((res) => {setItemsFromCategory(res.data)});
             promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
@@ -133,7 +133,7 @@ function Category(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(`http://localhost:5000/menos-um`, body, config);
+        const promise = axios.post(`https://ifeiraapp.herokuapp.com/menos-um`, body, config);
 
         promise.then((res) => setProdutos(res.data));
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
@@ -146,7 +146,7 @@ function Category(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(`http://localhost:5000/mais-um`, body, config);
+        const promise = axios.post(`https://ifeiraapp.herokuapp.com/mais-um`, body, config);
 
         promise.then((res) => setProdutos(res.data));
         promise.catch((err) => console.log(err));
@@ -238,7 +238,7 @@ function Buy(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.get("http://localhost:5000/carrinho", config);
+        const promise = axios.get("https://ifeiraapp.herokuapp.com/carrinho", config);
 
         promise.then((res) => setProdutos(res.data));
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"))
@@ -250,7 +250,7 @@ function Buy(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.get("http://localhost:5000/checkout", config);
+        const promise = axios.get("https://ifeiraapp.herokuapp.com/checkout", config);
 
         promise.then((res) => setValorTotal(res.data));
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
@@ -263,7 +263,7 @@ function Buy(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(`http://localhost:5000/menos-um`, body, config);
+        const promise = axios.post(`https://ifeiraapp.herokuapp.com/menos-um`, body, config);
 
         promise.then((res) => setProdutos(res.data));
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
@@ -276,7 +276,7 @@ function Buy(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(`http://localhost:5000/mais-um`, body, config);
+        const promise = axios.post(`https://ifeiraapp.herokuapp.com/mais-um`, body, config);
 
         promise.then((res) => setProdutos(res.data));
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
@@ -291,7 +291,7 @@ function Buy(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.post(`http://localhost:5000/confirma-pedido`, body, config);
+        const promise = axios.post(`https://ifeiraapp.herokuapp.com/confirma-pedido`, body, config);
         promise.then(() => {alert("Pedido efetuado com sucesso!")
                             setAtivarPedido(false)});
         promise.catch(() => alert("Ocorreu um erro! Atualize a página!"))

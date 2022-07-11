@@ -23,7 +23,7 @@ export default function RegisterScreen(){
         const body={email , name , password , home}
                 
        //  const promise=   axios.post('https://ifeiraapp.herokuapp.com/sign-up' , body)
-         const promise= axios.post('http://localhost:5000/sign-up' , body)
+         const promise= axios.post('https://ifeiraapp.herokuapp.com/sign-up' , body)
       
         promise
         .then(res=>{ 
