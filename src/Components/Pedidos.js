@@ -1,7 +1,25 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import appContext from "../Contexts/AppContext";
+import axios from "axios";
 
 export default function Pedidos() {
+
+    const [pedidos, setPedidos] = useState([]);
+    const { token } = useContext(appContext);
+
+    useEffect(() => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.get("http://localhost:5000/pedidos", config);
+
+        promise.then((res) => setPedidos(res.data));
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"))
+    }, []);
 
     return (
         <>
@@ -9,14 +27,12 @@ export default function Pedidos() {
             <Link to="/home" >
             <Icon><ion-icon name="arrow-back-outline"></ion-icon></Icon>
             </Link>
-            <Pedido>
-                <NomeDoPedido>Pedido Nº 1</NomeDoPedido>
-                <Saldo>239,98</Saldo>
-            </Pedido>
-            <Pedido>
-                <NomeDoPedido>Pedido Nº 2</NomeDoPedido>
-                <Saldo>139,98</Saldo>
-            </Pedido>
+            {pedidos.map((pedido, index) => { return (
+                <Pedido>
+                    <NomeDoPedido>Pedido Nº {pedido.numeroPedido}</NomeDoPedido>
+                    <Saldo>{pedido.valorTotal}</Saldo>
+                </Pedido>
+            )})}
         </OutroContainer>
         </>
     )

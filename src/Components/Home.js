@@ -5,6 +5,7 @@ import appContext from "../Contexts/AppContext.js"
 import { useContext } from "react"
 import {Link} from "react-router-dom"
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -227,7 +228,9 @@ function Buy(){
     const [ativarPedido, setAtivarPedido]=useState(false);
     const [valorTotal, setValorTotal]=useState(0);
     const [produtos, setProdutos]=useState([]);
+    const [modalAtivo, setModalAtivo]=useState(false);
     const {token}=useContext(appContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const config = {
@@ -276,7 +279,22 @@ function Buy(){
         const promise = axios.post(`http://localhost:5000/mais-um`, body, config);
 
         promise.then((res) => setProdutos(res.data));
-        promise.catch((err) => console.log(err));
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"));
+    }
+
+    function confirmarPedido() {
+        const body = {
+            valorTotal
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.post(`http://localhost:5000/confirma-pedido`, body, config);
+        promise.then(() => {alert("Pedido efetuado com sucesso!")
+                            setAtivarPedido(false)});
+        promise.catch(() => alert("Ocorreu um erro! Atualize a página!"))
     }
 
     return(
@@ -302,7 +320,7 @@ function Buy(){
                 <Modal>
                     <h2>O valor total do seu pedido é</h2>
                     <Saldo>{valorTotal.toString().replace(".", ",")}</Saldo>
-                    <BotaoConfirmar>Confirmar Pedido</BotaoConfirmar>
+                    <BotaoConfirmar onClick={() => confirmarPedido()}>Confirmar Pedido</BotaoConfirmar>
                 </Modal>
             </ContainerOverlay>
         </OutroContainer>
